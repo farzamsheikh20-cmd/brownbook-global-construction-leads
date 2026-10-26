@@ -91,6 +91,29 @@
       "editor": "checkbox",
       "default": true
     },
+    "useResidentialProxy": {
+      "title": "Use Apify residential proxy",
+      "description": "Use Apify residential proxy traffic for Brownbook company profiles and rotate the session when Brownbook returns 403 or 429.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true
+    },
+    "proxyCountryCode": {
+      "title": "Proxy country code",
+      "description": "Two-letter country code for the residential proxy. US is recommended for Brownbook.",
+      "type": "string",
+      "editor": "textfield",
+      "default": "US"
+    },
+    "proxyRetryCount": {
+      "title": "Proxy retries per profile",
+      "description": "Number of fresh residential proxy sessions tried after blocked or temporary responses.",
+      "type": "integer",
+      "editor": "number",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 6
+    },
     "campaignName": {
       "title": "Campaign name",
       "description": "Keep this unchanged to continue saved progress and deduplication across runs.",
@@ -126,6 +149,6 @@
   },
   "required": [
     "startUrl", "targetCountries", "constructionKeywords", "maximumNewCompanies",
-    "maximumProfilesVisited", "maximumSitemapsThisRun", "campaignName"
+    "maximumProfilesVisited", "maximumSitemapsThisRun", "campaignName", "useResidentialProxy"
   ]
 }
