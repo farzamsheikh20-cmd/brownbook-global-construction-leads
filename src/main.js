@@ -22,6 +22,9 @@ const defaults = {
   collectEmails: true,
   includeUnknownCountries: false,
   scanNewestFirst: true,
+  useResidentialProxy: true,
+  proxyCountryCode: 'US',
+  proxyRetryCount: 3,
   campaignName: 'brownbook-global-construction-design',
   resetProgress: false,
   requestTimeoutSecs: 60,
@@ -68,6 +71,17 @@ async function saveState() {
 Actor.on('persistState', saveState);
 
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+const proxyConfiguration = input.useResidentialProxy
+  ? await Actor.createProxyConfiguration({
+      groups: ['RESIDENTIAL'],
+      countryCode: String(input.proxyCountryCode || 'US').toUpperCase(),
+    })
+  : null;
+
+if (proxyConfiguration) {
+  log.info('Apify residential proxy enabled', { countryCode: String(input.proxyCountryCode || 'US').toUpperCase() });
+}
+
 const client = gotScraping.extend({
   timeout: { request: input.requestTimeoutSecs * 1000 },
   retry: { limit: 3, methods: ['GET'], statusCodes: [408, 425, 429, 500, 502, 503, 504] },
@@ -81,6 +95,34 @@ async function getText(url) {
   const response = await client.get(url);
   if (response.statusCode >= 400) throw new Error(`HTTP ${response.statusCode} for ${url}`);
   return response.body;
+}
+
+async function getProfileText(url) {
+  if (!proxyConfiguration) return getText(url);
+
+  let lastError;
+  for (let attempt = 1; attempt <= input.proxyRetryCount; attempt++) {
+    const sessionId = `brownbook_${Date.now()}_${attempt}_${Math.random().toString(36).slice(2, 10)}`;
+    try {
+      const proxyUrl = await proxyConfiguration.newUrl(sessionId);
+      const response = await client.get(url, { proxyUrl, retry: { limit: 0 } });
+      if (response.statusCode === 403 || response.statusCode === 429) {
+        throw new Error(`HTTP ${response.statusCode}`);
+      }
+      if (response.statusCode >= 400) throw new Error(`HTTP ${response.statusCode}`);
+      return response.body;
+    } catch (error) {
+      lastError = error;
+      log.warning('Brownbook profile request blocked; rotating residential proxy session', {
+        profileUrl: url,
+        attempt,
+        maximumAttempts: input.proxyRetryCount,
+        message: error.message,
+      });
+      if (attempt < input.proxyRetryCount) await sleep(1500);
+    }
+  }
+  throw new Error(`${lastError?.message || 'Profile request failed'} for ${url}`);
 }
 
 let companiesOutputThisRun = 0;
@@ -122,7 +164,7 @@ try {
         profilesVisited++;
 
         try {
-          const html = await getText(profileUrl);
+          const html = await getProfileText(profileUrl);
           const record = parseBrownbookProfile(html, profileUrl, sitemapUrl, input.constructionKeywords);
           processedProfileIds.add(businessId);
 
