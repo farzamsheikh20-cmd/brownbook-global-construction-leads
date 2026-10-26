@@ -1,1 +1,13 @@
-
+{
+  "actorSpecification": 1,
+  "name": "brownbook-global-construction-leads",
+  "title": "Brownbook Global Construction Leads",
+  "description": "Collect public construction, architecture, drafting, BIM and rendering company websites and contacts from Brownbook sitemaps.",
+  "version": "0.0",
+  "buildTag": "latest",
+  "dockerfile": "../Dockerfile",
+  "input": "./input_schema.json",
+  "storages": {
+    "dataset": "./dataset_schema.json"
+  }
+}

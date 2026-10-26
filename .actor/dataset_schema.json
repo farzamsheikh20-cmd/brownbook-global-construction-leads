@@ -1,0 +1,29 @@
+{
+  "actorSpecification": 1,
+  "fields": {},
+  "views": {
+    "overview": {
+      "title": "Brownbook construction companies",
+      "transformation": {
+        "fields": [
+          "companyName", "website", "email", "phone", "address", "country",
+          "industryMatch", "brownbookProfileUrl", "sourceSitemapUrl"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": { "label": "Company", "format": "text" },
+          "website": { "label": "Website", "format": "link" },
+          "email": { "label": "Email", "format": "text" },
+          "phone": { "label": "Phone", "format": "text" },
+          "address": { "label": "Address", "format": "text" },
+          "country": { "label": "Country", "format": "text" },
+          "industryMatch": { "label": "Matched industry", "format": "text" },
+          "brownbookProfileUrl": { "label": "Brownbook profile", "format": "link" },
+          "sourceSitemapUrl": { "label": "Source sitemap", "format": "link" }
+        }
+      }
+    }
+  }
+}
