@@ -1,0 +1,17 @@
+{
+  "name": "brownbook-global-construction-leads",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Apify Actor that collects public construction and architecture company contacts from Brownbook sitemaps.",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "apify": "^3.7.2",
+    "got-scraping": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
