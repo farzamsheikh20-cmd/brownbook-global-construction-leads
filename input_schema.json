@@ -1,0 +1,154 @@
+{
+  "title": "Brownbook global construction and architecture collection",
+  "description": "Read public Brownbook sitemaps, identify construction and design firms, visit public profiles, and collect real external websites and contacts.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrl": {
+      "title": "Brownbook sitemap index URL",
+      "description": "The public Brownbook master sitemap index used to discover business profiles.",
+      "type": "string",
+      "editor": "textfield",
+      "default": "https://api.brownbook.net/sitemap_indexes.xml"
+    },
+    "targetCountries": {
+      "title": "Target countries or regions",
+      "description": "Country codes to retain. EU enables supported European Union countries. Common values: US, CA, GB, AU and EU.",
+      "type": "array",
+      "editor": "stringList",
+      "default": ["US", "CA", "GB", "AU", "EU"],
+      "items": { "type": "string" }
+    },
+    "constructionKeywords": {
+      "title": "Construction and design keywords",
+      "description": "Keywords used to identify likely construction, architecture, BIM, drafting and rendering profiles from sitemap URLs.",
+      "type": "array",
+      "editor": "stringList",
+      "default": [
+        "construction", "contractor", "builder", "building", "design-build", "architect", "architecture",
+        "architectural", "drafting", "cad", "bim", "revit", "rendering", "visualization", "interior-design",
+        "landscape-architecture", "engineering", "engineer", "concrete", "masonry", "brick", "electrical",
+        "electrician", "plumbing", "plumber", "hvac", "heating", "air-conditioning", "mechanical", "roofing",
+        "roofer", "drywall", "framing", "carpentry", "carpenter", "glazing", "glass", "fire-sprinkler",
+        "fire-protection", "excavation", "excavating", "grading", "paving", "asphalt", "waterproofing",
+        "restoration", "demolition", "flooring", "painting", "insulation", "steel", "fabrication", "millwork",
+        "surveying", "civil", "remodeling", "renovation", "landscaping", "foundation", "scaffolding"
+      ],
+      "items": { "type": "string" }
+    },
+    "maximumNewCompanies": {
+      "title": "Maximum new companies this run",
+      "description": "Stop after this many new, unique companies have been saved during the current run.",
+      "type": "integer",
+      "editor": "number",
+      "default": 500,
+      "minimum": 1,
+      "maximum": 10000
+    },
+    "maximumProfilesVisited": {
+      "title": "Maximum profiles visited this run",
+      "description": "Maximum number of candidate Brownbook company profiles opened during this run.",
+      "type": "integer",
+      "editor": "number",
+      "default": 1500,
+      "minimum": 1,
+      "maximum": 50000
+    },
+    "maximumSitemapsThisRun": {
+      "title": "Maximum profile sitemaps this run",
+      "description": "Maximum number of leaf sitemaps scanned in one run. Each may contain many company URLs.",
+      "type": "integer",
+      "editor": "number",
+      "default": 100,
+      "minimum": 1,
+      "maximum": 5000
+    },
+    "requireWebsite": {
+      "title": "Require a real company website",
+      "description": "Save only companies with a valid external website after excluding social networks and other directories.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true
+    },
+    "collectEmails": {
+      "title": "Collect public profile emails",
+      "description": "Collect email addresses publicly displayed on Brownbook company profiles.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true
+    },
+    "includeUnknownCountries": {
+      "title": "Include companies with unknown country",
+      "description": "Save otherwise valid companies when their country cannot be confidently detected.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": false
+    },
+    "scanNewestFirst": {
+      "title": "Scan newest companies first",
+      "description": "Start with Brownbook's newest sitemap/profile records before older records.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true
+    },
+    "useResidentialProxy": {
+      "title": "Use Apify residential proxy",
+      "description": "Use Apify residential proxy traffic for Brownbook company profiles and rotate the session when Brownbook returns 403 or 429.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true
+    },
+    "proxyCountryCode": {
+      "title": "Proxy country code",
+      "description": "Two-letter country code for the residential proxy. US is recommended for Brownbook.",
+      "type": "string",
+      "editor": "textfield",
+      "default": "US"
+    },
+    "proxyRetryCount": {
+      "title": "Proxy retries per profile",
+      "description": "Number of fresh residential proxy sessions tried after blocked or temporary responses.",
+      "type": "integer",
+      "editor": "number",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 6
+    },
+    "campaignName": {
+      "title": "Campaign name",
+      "description": "Keep this unchanged to continue saved progress and deduplication across runs.",
+      "type": "string",
+      "editor": "textfield",
+      "default": "brownbook-global-construction-design"
+    },
+    "resetProgress": {
+      "title": "Reset saved campaign progress",
+      "description": "Erase the campaign checkpoint and deduplication history. Enable only on the first run of a new campaign.",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": false
+    },
+    "requestTimeoutSecs": {
+      "title": "Request timeout",
+      "description": "Maximum time allowed for each sitemap or company-profile request.",
+      "type": "integer",
+      "editor": "number",
+      "default": 60,
+      "minimum": 10,
+      "maximum": 180
+    },
+    "delayMillis": {
+      "title": "Delay between profile requests",
+      "description": "Polite delay between Brownbook profile requests. Brownbook requests a 10-second delay for general crawlers.",
+      "type": "integer",
+      "editor": "number",
+      "default": 10000,
+      "minimum": 1000,
+      "maximum": 60000
+    }
+  },
+  "required": [
+    "startUrl", "targetCountries", "constructionKeywords", "maximumNewCompanies",
+    "maximumProfilesVisited", "maximumSitemapsThisRun", "campaignName", "useResidentialProxy"
+  ]
+}
